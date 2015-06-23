@@ -13,7 +13,7 @@ dc.leafletChart = function(_chart) {
     }).addTo(map);
   }
 
-  _chart.doRender = function() {
+  _chart._doRender = function() {
     _map = L.map(_chart.root().node(),_mapOptions);
     if (_defaultCenter && _defaultZoom)
       _map.setView(_chart.toLocArray(_defaultCenter), _defaultZoom);
@@ -22,7 +22,7 @@ dc.leafletChart = function(_chart) {
 
     _chart._postRender();
 
-    return _chart.doRedraw();
+    return _chart._doRedraw();
   }
 
   _chart._postRender = function() {
@@ -135,8 +135,8 @@ dc.leafletMarkerChart = function(parent, chartGroup) {
     _chart.map().addLayer(_layerGroup);
   }
 
-  _chart.doRedraw = function() {
-    var groups = _chart.computeOrderedGroups().filter(function (d) {
+  _chart._doRedraw = function() {
+    var groups = _chart._computeOrderedGroups(_chart.data()).filter(function (d) {
       return _chart.valueAccessor()(d) !== 0;
     });
     if (_currentGroups && _currentGroups.toString()==groups.toString())
@@ -359,10 +359,10 @@ dc.leafletChoroplethChart = function(parent, chartGroup) {
     _chart.map().addLayer(_geojsonLayer);
   }
 
-  _chart.doRedraw = function() {
+  _chart._doRedraw = function() {
     _geojsonLayer.clearLayers();
     _dataMap=[];
-    _chart.computeOrderedGroups().forEach(function (d,i) {
+    _chart._computeOrderedGroups(_chart.data()).forEach(function (d,i) {
       _dataMap[_chart.keyAccessor()(d)] = {'d':d,'i':i};
     });
     _geojsonLayer.addData(_chart.geojson());
